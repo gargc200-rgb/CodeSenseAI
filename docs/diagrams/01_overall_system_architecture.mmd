@@ -1,0 +1,58 @@
+```mermaid
+graph TD
+    subgraph ClientLayer ["1. Client Layer (Student UI)"]
+        A["Student Browser"]
+        A1["Code Editor (Python/C++/Java)"]
+        A2["Prompt Selector (P1/P2/P3)"]
+        A3["Results & Hints Dashboard"]
+    end
+
+    subgraph APILayer ["2. Application Gateway (FastAPI)"]
+        B["FastAPI Web Server (Port 8000)"]
+        B1["Request Sanitizer & Validator"]
+        B2["Session History Cache"]
+        B3["Report Generator (PDF/MD)"]
+    end
+
+    subgraph PromptLayer ["3. Prompt Engineering Architecture"]
+        C["Prompt Manager"]
+        C1["P1: Baseline Template"]
+        C2["P2: Improved Template"]
+        C3["P3: Final Optimized Template"]
+        C4["Few-Shot Exemplar Injector"]
+        C5["Negative Anti-Leakage Constraints"]
+    end
+
+    subgraph LLMLayer ["4. Multi-Provider LLM Engine"]
+        D["LLM Client Dispatcher"]
+        D1["Google Gemini (REST API)"]
+        D2["OpenAI GPT-4o mini"]
+        D3["Deterministic Pedagogical Mock Engine"]
+    end
+
+    subgraph ValidationLayer ["5. Response Validation & Pedagogy"]
+        E["Response Parser"]
+        E1["JSON Markdown Extractor"]
+        E2["Pydantic Schema Validator"]
+        E3["Anti-Leakage Guardrail Verifier"]
+    end
+
+    %% Flow connections
+    A -->|Submit Code + Language| B
+    B --> B1
+    B1 -->|Validated Payload| C
+    C --> C3
+    C3 -->|Rendered Structured Prompt| D
+    D --> D1
+    D --> D2
+    D --> D3
+    D1 -->|Raw Model Output| E
+    D2 -->|Raw Model Output| E
+    D3 -->|Raw Model Output| E
+    E --> E1
+    E1 --> E2
+    E2 --> E3
+    E3 -->|Validated Socratic Review| B
+    B --> B2
+    B -->|JSON Response| A3
+```

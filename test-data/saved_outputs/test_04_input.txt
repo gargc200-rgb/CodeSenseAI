@@ -1,0 +1,9 @@
+// Test #4: Java Array Index Out of Bounds (Normal)
+// Language: Java
+
+public class ArrayTest {
+    public static void main(String[] args) {
+        int[] nums = {1, 2, 3, 4, 5};
+        System.out.println("Element: " + nums[10]);
+    }
+}

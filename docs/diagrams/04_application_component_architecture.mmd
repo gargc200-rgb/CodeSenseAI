@@ -1,0 +1,55 @@
+```mermaid
+classDiagram
+    class FastAPIApp {
+        +serve_dashboard()
+        +health_check()
+        +get_prompts()
+        +analyze_code(req: CodeAnalysisRequest)
+        +compare_prompts(req: PromptCompareRequest)
+        +export_report(req)
+        +get_history()
+    }
+
+    class PromptManager {
+        -dict prompt_cache
+        +get_prompt_text(version_id)
+        +format_prompt(version_id, language, code, context)
+        +get_version_info(version_id)
+        +list_versions()
+    }
+
+    class LLMClient {
+        -str gemini_key
+        -str openai_key
+        +detect_available_provider()
+        +generate_response(prompt, language, version, provider, code)
+        -_call_gemini(prompt)
+        -_call_openai(prompt)
+        -_call_mock_engine(version, language, code, prompt)
+    }
+
+    class ResponseParser {
+        +extract_json_str(raw_text)
+        +repair_json_string(json_str)
+        +parse(raw_output, language, version)
+        +parse_baseline_unstructured(raw_text, language)
+    }
+
+    class Validator {
+        +CodeAnalysisRequest
+        +CodeIssue
+        +CodeAnalysisResponse
+        +SeverityLevel
+    }
+
+    class ReportGenerator {
+        +generate_markdown(analysis, code, student_id)
+        +generate_pdf(analysis, code, student_id)
+    }
+
+    FastAPIApp --> PromptManager
+    FastAPIApp --> LLMClient
+    FastAPIApp --> ResponseParser
+    FastAPIApp --> Validator
+    FastAPIApp --> ReportGenerator
+```

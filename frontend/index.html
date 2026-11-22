@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeSense AI – Educational Code Review Assistant (SCSE4041 - Milestone 2)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col font-sans text-slate-800">
+
+    <!-- Top Navigation / Academic Header -->
+    <header class="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-40 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center font-black text-xl shadow-inner">
+                    💡
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="font-extrabold text-lg tracking-tight text-white">CodeSense <span class="text-sky-400">AI</span></span>
+                        <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-sky-900/80 text-sky-300 border border-sky-700">Milestone 2</span>
+                        <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-900/80 text-emerald-300 border border-emerald-700">Project C4</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400">Prompt Engineering (SCSE4041) • First-Year Programming Instructor</p>
+                </div>
+            </div>
+
+            <!-- Header Badges -->
+            <div class="hidden md:flex items-center space-x-4 text-xs">
+                <div class="flex items-center space-x-1.5 bg-slate-800/90 px-3 py-1.5 rounded-full border border-slate-700 text-slate-300">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="activeProviderBadge" class="font-mono">Detecting Provider...</span>
+                </div>
+                <div class="flex items-center space-x-1 bg-amber-950/60 border border-amber-800/60 px-3 py-1.5 rounded-full text-amber-300">
+                    <span>🛡️</span>
+                    <span class="font-medium">Anti-Solution Leakage Enabled</span>
+                </div>
+                <a href="#experiments-section" class="text-slate-300 hover:text-sky-400 transition font-medium">
+                    📊 Experiments
+                </a>
+                <a href="#architecture-section" class="text-slate-300 hover:text-sky-400 transition font-medium">
+                    🏛️ Architecture
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- Intro Banner / Pedagogical Philosophy -->
+        <div class="bg-gradient-to-r from-sky-900 via-indigo-950 to-slate-900 rounded-2xl p-5 text-white shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border border-slate-800">
+            <div class="space-y-1">
+                <div class="flex items-center space-x-2">
+                    <span class="bg-sky-500/20 text-sky-300 text-xs px-2.5 py-0.5 rounded-full font-semibold border border-sky-400/30">Educational Code Review</span>
+                    <span class="text-xs text-slate-300">Target: C++, Python, Java First-Year Students</span>
+                </div>
+                <h1 class="text-xl md:text-2xl font-bold tracking-tight">Independent Debugging Guided by Socratic Prompting</h1>
+                <p class="text-xs md:text-sm text-slate-300 max-w-3xl leading-relaxed">
+                    Unlike standard AI coding assistants that leak complete answers, CodeSense AI decomposes issues into severity levels, conceptual explanations, and Socratic hints—empowering students to identify and resolve bugs independently.
+                </p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-2 shrink-0 w-full md:w-auto">
+                <button id="compareBtn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold shadow-sm transition flex items-center justify-center space-x-1.5 border border-indigo-400/30">
+                    <span>⚖️</span>
+                    <span>Compare P1 / P2 / P3</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Two-Column Workspace Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <!-- Left Column: Code Editor & Controls (7 Cols) -->
+            <div class="lg:col-span-7 space-y-4">
+                
+                <!-- Controls Toolbar -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <!-- Language Selector -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Language</label>
+                            <select id="languageSelect" class="w-full text-xs font-medium bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                <option value="Python">Python</option>
+                                <option value="C++">C++</option>
+                                <option value="Java">Java</option>
+                            </select>
+                        </div>
+
+                        <!-- Prompt Version Selector -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Prompt Architecture</label>
+                            <select id="promptSelect" class="w-full text-xs font-medium bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                <option value="P3" selected>P3: Final Optimized (Pedagogical)</option>
+                                <option value="P2">P2: Improved (Role + Severity)</option>
+                                <option value="P1">P1: Baseline (Unstructured)</option>
+                            </select>
+                        </div>
+
+                        <!-- Provider Selector -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">LLM Provider</label>
+                            <select id="providerSelect" class="w-full text-xs font-medium bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                                <option value="auto" selected>Auto-Detect / Offline Fallback</option>
+                                <option value="gemini">Google Gemini</option>
+                                <option value="openai">OpenAI (GPT-4o mini)</option>
+                                <option value="mock">Pedagogical Mock Engine (Deterministic)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Curated Beginner Examples -->
+                    <div class="pt-1">
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Load Curated Beginner Bug Examples</label>
+                        <select id="exampleSelect" class="w-full text-xs font-medium bg-sky-50/50 border border-sky-200 text-sky-900 rounded-lg px-2.5 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                            <option value="">-- Select a representative student program --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Code Editor Area -->
+                <div class="editor-container shadow-sm">
+                    <div class="bg-slate-800 text-slate-300 px-4 py-2 flex items-center justify-between text-xs border-b border-slate-700">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                            <span class="font-mono text-slate-400 pl-2">student_submission.code</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button id="copyCodeBtn" class="hover:text-white px-2 py-0.5 rounded bg-slate-700/60 hover:bg-slate-700 transition" title="Copy Code">
+                                📋 Copy
+                            </button>
+                            <button id="clearBtn" class="hover:text-rose-400 px-2 py-0.5 rounded bg-slate-700/60 hover:bg-slate-700 transition" title="Clear Editor">
+                                ✕ Clear
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="codeEditor" class="editor-textarea" spellcheck="false" placeholder="// Paste or type C++, Python, or Java code here...
+// Or select a sample bug from the dropdown above!"></textarea>
+                </div>
+
+                <!-- Problem Context (Optional) -->
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Student Problem Context / Intended Goal <span class="text-slate-400 font-normal lowercase">(optional)</span>
+                    </label>
+                    <textarea id="problemDesc" rows="2" class="w-full text-xs text-slate-800 bg-slate-50 border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="e.g. Write a function to calculate student average score and print grade..."></textarea>
+                </div>
+
+                <!-- Primary Action Buttons -->
+                <div class="flex items-center space-x-3">
+                    <button id="analyzeBtn" class="flex-1 py-3 px-6 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center space-x-2">
+                        <span>⚡</span>
+                        <span>Analyze Code</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Column: Results Dashboard (5 Cols) -->
+            <div class="lg:col-span-5 space-y-4">
+
+                <!-- Loading State -->
+                <div id="loadingState" class="hidden bg-white p-8 rounded-xl border border-slate-200 shadow-sm text-center space-y-4">
+                    <div class="inline-block w-12 h-12 border-4 border-sky-200 border-t-sky-600 rounded-full animate-spin"></div>
+                    <h3 class="font-bold text-slate-800 text-base">Decomposing & Reviewing Code...</h3>
+                    <p class="text-xs text-slate-500 max-w-xs mx-auto">
+                        Executing pedagogical prompt architecture, isolating syntactic and logical anomalies, and generating Socratic hints.
+                    </p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm text-center space-y-4">
+                    <div class="w-16 h-16 mx-auto bg-sky-50 text-sky-600 rounded-full flex items-center justify-center text-3xl">
+                        🔍
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base">Awaiting Code Submission</h3>
+                        <p class="text-xs text-slate-500 max-w-sm mx-auto mt-1 leading-relaxed">
+                            Select one of the curated examples or write code in Python, C++, or Java. Click <b>"Analyze Code"</b> to receive structured feedback, severity levels, and guided learning hints.
+                        </p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-lg text-left text-[11px] text-slate-600 border border-slate-200 space-y-1">
+                        <div class="font-bold text-slate-700">What CodeSense AI evaluates:</div>
+                        <div>✓ Syntax & compilation errors</div>
+                        <div>✓ Runtime crashes (division by zero, null pointers)</div>
+                        <div>✓ Array bounds & loop off-by-one errors</div>
+                        <div>✓ Socratic hints with zero complete solution leakage</div>
+                    </div>
+                </div>
+
+                <!-- Analysis Results Container -->
+                <div id="resultsContainer" class="hidden space-y-4">
+
+                    <!-- Results Header Card -->
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                            <div class="flex items-center space-x-2">
+                                <span class="font-bold text-slate-900 text-sm">Review Results</span>
+                                <span id="resPromptVersion" class="px-2 py-0.5 rounded text-[11px] font-mono bg-sky-100 text-sky-800 font-bold">P3</span>
+                                <span id="resProvider" class="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-100 text-slate-700">mock</span>
+                            </div>
+                            <span id="resExecTime" class="text-xs font-mono text-slate-400">0 ms</span>
+                        </div>
+
+                        <!-- Anti-Leakage Guardrail Status -->
+                        <div>
+                            <span id="resLeakageBadge" class="px-2 py-0.5 rounded text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-300">
+                                🛡️ 0% Solution Leakage (Pedagogical Guardrail)
+                            </span>
+                        </div>
+
+                        <!-- 1. Overall Assessment -->
+                        <div>
+                            <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">1. Overall Assessment</span>
+                            <p id="overallAssessmentText" class="mt-1 text-xs text-slate-700 font-medium leading-relaxed"></p>
+                        </div>
+                    </div>
+
+                    <!-- 2. Detected Issues List -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between px-1">
+                            <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">2. Detected Issues & Learning Hints</span>
+                        </div>
+                        <div id="detectedIssuesList" class="space-y-3"></div>
+                    </div>
+
+                    <!-- 3. Positive Feedback Card -->
+                    <div class="bg-emerald-50/70 border border-emerald-200 rounded-xl p-4 shadow-sm space-y-1">
+                        <div class="flex items-center space-x-1.5 text-xs font-bold text-emerald-900">
+                            <span>⭐</span>
+                            <span>3. POSITIVE FEEDBACK (What You Did Right)</span>
+                        </div>
+                        <p id="positiveFeedbackText" class="text-xs text-emerald-800 leading-relaxed"></p>
+                    </div>
+
+                    <!-- 4. Next Step Card -->
+                    <div class="bg-indigo-50/70 border border-indigo-200 rounded-xl p-4 shadow-sm space-y-1">
+                        <div class="flex items-center space-x-1.5 text-xs font-bold text-indigo-900">
+                            <span>🚀</span>
+                            <span>4. RECOMMENDED NEXT LEARNING STEP</span>
+                        </div>
+                        <p id="nextStepText" class="text-xs text-indigo-800 leading-relaxed"></p>
+                    </div>
+
+                    <!-- Export Report Action -->
+                    <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between gap-2">
+                        <span class="text-xs font-semibold text-slate-700">Export Review Report:</span>
+                        <div class="flex items-center space-x-2">
+                            <button id="exportMdBtn" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition border border-slate-300">
+                                📄 Markdown
+                            </button>
+                            <button id="exportPdfBtn" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold rounded-lg transition shadow-sm">
+                                📥 PDF Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent History Accordion / Drawer -->
+                <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Session Review History</span>
+                        <button id="clearHistoryBtn" class="text-[11px] text-slate-400 hover:text-rose-500">Clear</button>
+                    </div>
+                    <ul id="historyList" class="space-y-1.5 max-h-48 overflow-y-auto"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Side-by-Side Prompt Comparison View -->
+        <div id="comparisonContainer" class="hidden space-y-4 pt-4 border-t border-slate-200">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900">Prompt Comparison Matrix (P1 vs P2 vs P3)</h2>
+                    <p class="text-xs text-slate-500">Live evaluation of the exact same code across all 3 prompt engineering stages.</p>
+                </div>
+                <div class="flex items-center space-x-2 text-xs">
+                    <span class="px-2 py-1 rounded bg-slate-100 text-slate-700 font-mono">P1 = Baseline</span>
+                    <span class="px-2 py-1 rounded bg-sky-100 text-sky-800 font-mono">P2 = Improved</span>
+                    <span class="px-2 py-1 rounded bg-indigo-100 text-indigo-800 font-mono font-bold">P3 = Final Optimized</span>
+                </div>
+            </div>
+
+            <!-- 3 Columns for P1, P2, P3 -->
+            <div id="comparisonGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- Section: Prompt Experimentation & Evaluation Dashboard -->
+        <section id="experiments-section" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2.5 py-0.5 rounded text-xs font-bold bg-indigo-100 text-indigo-800 uppercase">Phase 5</span>
+                        <h2 class="text-xl font-bold text-slate-900">Prompt Experimentation & Benchmarking</h2>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">
+                        Quantitative and qualitative evaluation of 10 representative test cases across 6 standardized criteria.
+                    </p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <a href="/experiments-assets/prompt_comparison_chart.png" target="_blank" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold border border-slate-300 transition">
+                        📈 Open Chart (PNG)
+                    </a>
+                    <a href="/experiments-assets/experiment_results.csv" download class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-semibold shadow-sm transition">
+                        📊 Download CSV
+                    </a>
+                </div>
+            </div>
+
+            <!-- Experiment Metrics Summary Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                    <span class="text-slate-400 font-bold uppercase text-[10px] tracking-wider">Test Suite Size</span>
+                    <div class="text-2xl font-black text-slate-800 mt-1">10 Cases</div>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Python, C++, Java</p>
+                </div>
+                <div class="p-4 rounded-xl bg-rose-50 border border-rose-200">
+                    <span class="text-rose-600 font-bold uppercase text-[10px] tracking-wider">P1 Solution Leakage</span>
+                    <div class="text-2xl font-black text-rose-700 mt-1">80.0%</div>
+                    <p class="text-[11px] text-rose-600 mt-0.5">Reveals full corrected code</p>
+                </div>
+                <div class="p-4 rounded-xl bg-amber-50 border border-amber-200">
+                    <span class="text-amber-600 font-bold uppercase text-[10px] tracking-wider">P2 Solution Leakage</span>
+                    <div class="text-2xl font-black text-amber-700 mt-1">20.0%</div>
+                    <p class="text-[11px] text-amber-600 mt-0.5">Partial replacement line hints</p>
+                </div>
+                <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+                    <span class="text-emerald-600 font-bold uppercase text-[10px] tracking-wider">P3 Solution Leakage</span>
+                    <div class="text-2xl font-black text-emerald-700 mt-1">0.0%</div>
+                    <p class="text-[11px] text-emerald-600 mt-0.5">100% Socratic & pedagogical</p>
+                </div>
+            </div>
+
+            <!-- Visual Chart Preview -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                <div class="lg:col-span-7 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <img src="/experiments-assets/prompt_comparison_chart.png" alt="Prompt Comparison Chart" class="w-full rounded-lg shadow-sm border border-slate-200" onerror="this.onerror=null; this.src='https://placehold.co/800x450?text=Chart+Generated+After+Running+Experiments';">
+                </div>
+                <div class="lg:col-span-5 space-y-3 text-xs">
+                    <h3 class="font-bold text-slate-800 text-sm">Key Experimental Findings</h3>
+                    <div class="p-3 bg-white rounded-lg border border-slate-200 space-y-1">
+                        <div class="font-bold text-slate-800">1. Structured Output Validity</div>
+                        <p class="text-slate-600">P1 yielded 0% JSON schema adherence (free-form markdown). P3 achieved 100% parseable RFC-8259 JSON.</p>
+                    </div>
+                    <div class="p-3 bg-white rounded-lg border border-slate-200 space-y-1">
+                        <div class="font-bold text-slate-800">2. Bug Diagnosis & Severity</div>
+                        <p class="text-slate-600">P1 grouped issues vaguely. P3's task decomposition enabled accurate classification into Critical, High, Medium, and Low.</p>
+                    </div>
+                    <div class="p-3 bg-white rounded-lg border border-slate-200 space-y-1">
+                        <div class="font-bold text-slate-800">3. Independent Learning Guardrails</div>
+                        <p class="text-slate-600">Few-shot exemplars with negative constraints reduced answer leakage from 80% (P1) to 0% (P3).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: System Architecture & Workflow -->
+        <section id="architecture-section" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div class="border-b border-slate-200 pb-3">
+                <div class="flex items-center space-x-2">
+                    <span class="px-2.5 py-0.5 rounded text-xs font-bold bg-sky-100 text-sky-800 uppercase">Phase 6</span>
+                    <h2 class="text-xl font-bold text-slate-900">System Architecture & Pipeline Flow</h2>
+                </div>
+                <p class="text-xs text-slate-500 mt-1">End-to-end data pipeline from untrusted user code to validated pedagogical feedback.</p>
+            </div>
+
+            <!-- Architecture Diagram Flowchart -->
+            <div class="bg-slate-900 text-slate-200 p-6 rounded-xl font-mono text-xs overflow-x-auto">
+                <div class="text-center font-bold text-sky-400 mb-4 tracking-wider uppercase text-sm">CodeSense AI End-to-End Execution Pipeline</div>
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-center">
+                    <div class="bg-slate-800 border border-slate-700 p-3 rounded-lg w-full md:w-36">
+                        <div class="text-sky-300 font-bold">1. Student</div>
+                        <div class="text-[10px] text-slate-400 mt-1">C++, Python, Java</div>
+                    </div>
+                    <div class="text-slate-500 font-bold">➔</div>
+                    <div class="bg-slate-800 border border-slate-700 p-3 rounded-lg w-full md:w-40">
+                        <div class="text-emerald-300 font-bold">2. Frontend</div>
+                        <div class="text-[10px] text-slate-400 mt-1">Editor & Validator</div>
+                    </div>
+                    <div class="text-slate-500 font-bold">➔</div>
+                    <div class="bg-slate-800 border border-slate-700 p-3 rounded-lg w-full md:w-44">
+                        <div class="text-indigo-300 font-bold">3. Backend (FastAPI)</div>
+                        <div class="text-[10px] text-slate-400 mt-1">Pydantic Sanitization</div>
+                    </div>
+                    <div class="text-slate-500 font-bold">➔</div>
+                    <div class="bg-slate-800 border border-slate-700 p-3 rounded-lg w-full md:w-44">
+                        <div class="text-amber-300 font-bold">4. Prompt Manager</div>
+                        <div class="text-[10px] text-slate-400 mt-1">P1 / P2 / P3 Template</div>
+                    </div>
+                    <div class="text-slate-500 font-bold">➔</div>
+                    <div class="bg-slate-800 border border-slate-700 p-3 rounded-lg w-full md:w-40">
+                        <div class="text-purple-300 font-bold">5. LLM Client</div>
+                        <div class="text-[10px] text-slate-400 mt-1">Gemini / OpenAI / Mock</div>
+                    </div>
+                    <div class="text-slate-500 font-bold">➔</div>
+                    <div class="bg-slate-800 border border-slate-700 p-3 rounded-lg w-full md:w-44">
+                        <div class="text-rose-300 font-bold">6. Response Parser</div>
+                        <div class="text-[10px] text-slate-400 mt-1">JSON Schema Guard</div>
+                    </div>
+                    <div class="text-slate-500 font-bold">➔</div>
+                    <div class="bg-slate-800 border border-slate-700 p-3 rounded-lg w-full md:w-40">
+                        <div class="text-sky-300 font-bold">7. Results Dashboard</div>
+                        <div class="text-[10px] text-slate-400 mt-1">Socratic Hints UI</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Academic Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 text-slate-400 text-xs py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                <p class="font-bold text-slate-200">CodeSense AI – Educational Programming Assistant</p>
+                <p class="text-slate-500 text-[11px] mt-0.5">Course: Prompt Engineering (SCSE4041) | Milestone 2 | Project ID: C4</p>
+            </div>
+            <div class="flex items-center space-x-4 text-[11px]">
+                <a href="/docs-assets/technical_report.md" target="_blank" class="hover:text-sky-400 transition">Technical Report</a>
+                <a href="/docs-assets/prompt_design_document.md" target="_blank" class="hover:text-sky-400 transition">Prompt Design Doc</a>
+                <a href="/docs-assets/testing_report.md" target="_blank" class="hover:text-sky-400 transition">Testing Report</a>
+                <a href="/docs-assets/MILESTONE_2_SUBMISSION_CHECKLIST.md" target="_blank" class="hover:text-sky-400 transition">Submission Audit</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/examples.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

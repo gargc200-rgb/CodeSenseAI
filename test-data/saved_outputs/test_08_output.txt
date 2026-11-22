@@ -1,0 +1,5 @@
+=== TEST RESULT: PASS ===
+Test No: 8
+Test Type: Edge
+Expected Finding: Logical accumulator bug identified despite non-English comment string.
+Actual Finding: High severity: Subtraction operator used in summation accumulator. Feedback provided in clear English.

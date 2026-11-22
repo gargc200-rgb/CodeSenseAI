@@ -1,0 +1,109 @@
+/* Custom Styles for CodeSense AI Dashboard */
+
+:root {
+    --primary: #0284c7;
+    --primary-dark: #0369a1;
+    --accent: #38bdf8;
+    --bg-dark: #0f172a;
+    --card-dark: #1e293b;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+}
+
+/* Code editor styling */
+.editor-container {
+    position: relative;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+}
+
+.editor-textarea {
+    font-family: "Fira Code", "Courier New", Courier, monospace;
+    font-size: 0.925rem;
+    line-height: 1.5;
+    background-color: #0d1117;
+    color: #e6edf3;
+    tab-size: 4;
+    resize: vertical;
+    border: none;
+    outline: none;
+    width: 100%;
+    min-height: 280px;
+    padding: 1rem;
+}
+
+.editor-textarea:focus {
+    outline: none;
+}
+
+/* Badge colors */
+.badge-critical {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.badge-high {
+    background-color: #fff7ed;
+    color: #ea580c;
+    border: 1px solid #ffedd5;
+}
+
+.badge-medium {
+    background-color: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #dbeafe;
+}
+
+.badge-low {
+    background-color: #f8fafc;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+
+.badge-clean {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+/* Socratic Hint Card */
+.hint-card {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-left: 4px solid #0284c7;
+}
+
+/* Pulse animation for loading */
+@keyframes pulse-slow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.animate-pulse-slow {
+    animation: pulse-slow 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}

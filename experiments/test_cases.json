@@ -1,0 +1,102 @@
+[
+  {
+    "id": "TC01",
+    "name": "Python Syntax Error (Missing Colon)",
+    "category": "Syntax Error",
+    "language": "Python",
+    "description": "Function header omitting the trailing colon.",
+    "code": "def calculate_discount(price, rate)\n    return price * (1 - rate)\n\nprint(calculate_discount(100, 0.1))",
+    "expected_finding": "SyntaxError: Missing colon at end of function definition header",
+    "expected_severity": "Critical"
+  },
+  {
+    "id": "TC02",
+    "name": "Python Runtime Error (Division by Zero)",
+    "category": "Runtime Error / Division by Zero",
+    "language": "Python",
+    "description": "Averaging numbers where student count can evaluate to zero without guard clause.",
+    "code": "total = 500\ncount = 0\naverage = total / count\nprint(average)",
+    "expected_finding": "ZeroDivisionError: Division by zero crashes the program",
+    "expected_severity": "High"
+  },
+  {
+    "id": "TC03",
+    "name": "C++ Off-by-One Loop Condition",
+    "category": "Incorrect Loop Condition / Off-by-One",
+    "language": "C++",
+    "description": "Loop condition <= 5 on an array of size 5 causing reading out of bounds.",
+    "code": "#include <iostream>\nint main() {\n    int arr[5] = {10, 20, 30, 40, 50};\n    for (int i = 0; i <= 5; i++) {\n        std::cout << arr[i] << \" \";\n    }\n    return 0;\n}",
+    "expected_finding": "Array index out of bounds: loop condition i <= 5 accesses invalid index 5",
+    "expected_severity": "Critical"
+  },
+  {
+    "id": "TC04",
+    "name": "Java Array Index Out of Bounds",
+    "category": "Array Index Error",
+    "language": "Java",
+    "description": "Directly accessing index 10 in a Java array initialized with length 5.",
+    "code": "public class ArrayTest {\n    public static void main(String[] args) {\n        int[] nums = {1, 2, 3, 4, 5};\n        System.out.println(\"Element: \" + nums[10]);\n    }\n}",
+    "expected_finding": "ArrayIndexOutOfBoundsException: Index 10 out of bounds for length 5",
+    "expected_severity": "Critical"
+  },
+  {
+    "id": "TC05",
+    "name": "Python Infinite Loop (Missing Increment)",
+    "category": "Logical Error / Infinite Loop",
+    "language": "Python",
+    "description": "While loop condition checks counter but counter is never incremented.",
+    "code": "i = 1\nwhile (i <= 5):\n    print(\"Number:\", i)\n    # Missing i += 1",
+    "expected_finding": "Infinite Loop: counter i is never updated inside the loop body",
+    "expected_severity": "High"
+  },
+  {
+    "id": "TC06",
+    "name": "C++ Uninitialized Variable",
+    "category": "Incorrect Variable Usage",
+    "language": "C++",
+    "description": "Local summation variable declared without initialization, adding to indeterminate memory.",
+    "code": "#include <iostream>\nint main() {\n    int sum;\n    for (int i = 1; i <= 5; i++) {\n        sum = sum + i;\n    }\n    std::cout << sum << std::endl;\n    return 0;\n}",
+    "expected_finding": "Uninitialized variable: sum contains garbage memory value before addition",
+    "expected_severity": "Critical"
+  },
+  {
+    "id": "TC07",
+    "name": "Java Missing Recursive Base Case",
+    "category": "Missing Condition / Recursion",
+    "language": "Java",
+    "description": "Recursive factorial implementation omitting the termination condition.",
+    "code": "public class Factorial {\n    public static int factorial(int n) {\n        return n * factorial(n - 1);\n    }\n    public static void main(String[] args) {\n        System.out.println(factorial(5));\n    }\n}",
+    "expected_finding": "StackOverflowError: Missing recursive base case (e.g. n <= 1)",
+    "expected_severity": "Critical"
+  },
+  {
+    "id": "TC08",
+    "name": "Python Logical Accumulator Inversion",
+    "category": "Logical Error",
+    "language": "Python",
+    "description": "Subtracting elements when attempting to compute total sum.",
+    "code": "numbers = [10, 20, 30]\ntotal = 0\nfor num in numbers:\n    total = total - num\nprint(\"Total sum:\", total)",
+    "expected_finding": "Logic error: Subtraction operator used instead of addition in accumulator",
+    "expected_severity": "High"
+  },
+  {
+    "id": "TC09",
+    "name": "Python Correct Program",
+    "category": "Correct Program",
+    "language": "Python",
+    "description": "Syntactically and logically clean arithmetic utility function.",
+    "code": "def add(a, b):\n    return a + b\n\nresult = add(15, 25)\nprint(\"Sum:\", result)",
+    "expected_finding": "No issue detected: Clean, correct program execution",
+    "expected_severity": "No issue detected"
+  },
+  {
+    "id": "TC10",
+    "name": "Java Null Reference Dereference",
+    "category": "Edge Case / Null Pointer",
+    "language": "Java",
+    "description": "Invoking string length on an unassigned null object reference.",
+    "code": "public class NullCheck {\n    public static void main(String[] args) {\n        String text = null;\n        System.out.println(\"Length: \" + text.length());\n    }\n}",
+    "expected_finding": "NullPointerException: Attempting to invoke .length() on null reference",
+    "expected_severity": "High"
+  }
+]

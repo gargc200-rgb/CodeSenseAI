@@ -1,0 +1,7 @@
+// Test #5: Python Infinite Loop (Normal)
+// Language: Python
+
+i = 1
+while (i <= 5):
+    print("Number:", i)
+    # Missing increment

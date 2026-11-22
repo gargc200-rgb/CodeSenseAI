@@ -1,0 +1,7 @@
+// Test #1: Python Syntax Error (Missing Colon) (Normal)
+// Language: Python
+
+def calculate_discount(price, rate)
+    return price * (1 - rate)
+
+print(calculate_discount(100, 0.1))

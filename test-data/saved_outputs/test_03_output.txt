@@ -1,0 +1,5 @@
+=== TEST RESULT: PASS ===
+Test No: 3
+Test Type: Normal
+Expected Finding: Array index out of bounds detected; Socratic hint on array size vs max index.
+Actual Finding: Critical severity: Loop condition i <= 5 accesses index 5. Guided hint on zero-based indexing.

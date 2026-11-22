@@ -1,0 +1,5 @@
+=== TEST RESULT: PASS ===
+Test No: 10
+Test Type: Invalid
+Expected Finding: Validation error rejecting non-code plain text or prompt asking student to provide code.
+Actual Finding: HTTP 422 Unprocessable Entity: Non-code submission caught by validator; prompts student to enter valid code.

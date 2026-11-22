@@ -1,0 +1,7 @@
+// Test #2: Python Division by Zero (Normal)
+// Language: Python
+
+total = 500
+count = 0
+average = total / count
+print(average)

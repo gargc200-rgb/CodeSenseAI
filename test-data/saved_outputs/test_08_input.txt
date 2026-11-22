@@ -1,0 +1,9 @@
+// Test #8: Python Inverted Accumulator with Hinglish Comments (Edge)
+// Language: Python
+
+# total me se minus kar rahe hain
+numbers = [10, 20, 30]
+total = 0
+for num in numbers:
+    total = total - num # Subtracting instead of adding
+print("Total sum:", total)

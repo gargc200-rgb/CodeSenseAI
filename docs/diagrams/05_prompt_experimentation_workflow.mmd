@@ -1,0 +1,18 @@
+```mermaid
+flowchart LR
+    Dataset["10 Benchmark Test Cases<br/>(C++, Python, Java)"] --> Dispatcher["Experiment Runner Engine"]
+    
+    Dispatcher --> P1Run["Execute Prompt P1 (Baseline)"]
+    Dispatcher --> P2Run["Execute Prompt P2 (Improved)"]
+    Dispatcher --> P3Run["Execute Prompt P3 (Final Optimized)"]
+    
+    P1Run --> Evaluator["Multi-Metric Evaluator Engine"]
+    P2Run --> Evaluator
+    P3Run --> Evaluator
+    
+    Evaluator --> Metrics["Compute 6 Standard Criteria:<br/>1. Bug Identification Accuracy<br/>2. Explanation Correctness<br/>3. Socratic Hint Usefulness<br/>4. Severity Accuracy<br/>5. JSON Schema Conformance<br/>6. Solution Leakage Rate"]
+    
+    Metrics --> CSVExport["experiment_results.csv"]
+    Metrics --> ChartGen["prompt_comparison_chart.png"]
+    Metrics --> MDAnalysis["experiment_analysis.md & prompt_comparison.md"]
+```

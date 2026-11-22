@@ -1,0 +1,5 @@
+=== TEST RESULT: PASS ===
+Test No: 4
+Test Type: Normal
+Expected Finding: ArrayIndexOutOfBoundsException identified for index 10 in size 5 array.
+Actual Finding: Critical severity: Index 10 exceeds allocated bounds of 5 elements. Socratic hint given.

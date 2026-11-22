@@ -1,0 +1,12 @@
+// Test #6: C++ Uninitialized Variable (Normal)
+// Language: C++
+
+#include <iostream>
+int main() {
+    int sum;
+    for (int i = 1; i <= 5; i++) {
+        sum = sum + i;
+    }
+    std::cout << sum << std::endl;
+    return 0;
+}

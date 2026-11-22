@@ -1,0 +1,8 @@
+// Test #9: Python Deeply Nested Stub with Ellipsis (Edge)
+// Language: Python
+
+def process_matrix(mat):
+    for row in mat:
+        for item in row:
+            ...
+            pass

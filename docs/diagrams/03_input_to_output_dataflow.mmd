@@ -1,0 +1,24 @@
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Student
+    participant Frontend as Browser Dashboard
+    participant Backend as FastAPI Server
+    participant PromptMgr as Prompt Manager
+    participant LLM as LLM Provider (Gemini / Mock)
+    participant Parser as Response Parser & Validator
+
+    Student->>Frontend: Paste code + select language (C++, Python, Java)
+    Student->>Frontend: Click 'Analyze Code'
+    Frontend->>Backend: POST /api/analyze (CodeAnalysisRequest)
+    Note over Backend: Validate non-empty code, char limits, language whitelist
+    Backend->>PromptMgr: format_prompt(version='P3', lang, code, context)
+    PromptMgr-->>Backend: Return hydrated prompt with exemplars & schema
+    Backend->>LLM: generate_response(prompt)
+    LLM-->>Backend: Return raw response text
+    Backend->>Parser: parse(raw_output, language, version='P3')
+    Note over Parser: Strip codeblocks, test JSON validity, enforce Pydantic schema
+    Parser-->>Backend: Validated CodeAnalysisResponse (0% solution leakage)
+    Backend-->>Frontend: HTTP 200 OK (JSON)
+    Frontend->>Student: Render Overall Assessment, Severity Badges, Socratic Hints, Positive Feedback
+```

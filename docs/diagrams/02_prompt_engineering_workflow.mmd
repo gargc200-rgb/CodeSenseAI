@@ -1,0 +1,18 @@
+```mermaid
+flowchart TD
+    Start["Student Submits Code"] --> Stage1["Stage 1: Context & Role Injection<br/>Role: Senior CS Pedagogy Specialist<br/>Context: First-Year Undergraduate Student"]
+    
+    Stage1 --> Stage2["Stage 2: 5-Step Task Decomposition<br/>1. Syntax & Lexical Grammar Check<br/>2. Semantic Logic & Edge-Case Tracing<br/>3. Severity Classification (Critical/High/Med/Low/Clean)<br/>4. Socratic Hint Derivation<br/>5. Positive Reinforcement & Remediation"]
+    
+    Stage2 --> Stage3["Stage 3: Few-Shot Exemplars<br/>Python, C++, Java Realistic Bug Demonstrations<br/>Demonstrating Non-Leaking Hints"]
+    
+    Stage3 --> Stage4["Stage 4: Strict Negative Constraints<br/>• Zero Complete-Solution Leakage<br/>• No Fixed Code Snippets<br/>• No Hallucinations<br/>• Strict RFC-8259 JSON Only"]
+    
+    Stage4 --> LLMExecution["LLM Generation Phase"]
+    
+    LLMExecution --> ValidationCheck{"Response Validator<br/>Valid JSON & No Code Leaked?"}
+    
+    ValidationCheck -->|Yes| SuccessDelivery["Deliver Socratic Hints & Severity to Student"]
+    ValidationCheck -->|No| JSONRepair["Heuristic JSON Repair & Codeblock Stripping"]
+    JSONRepair --> FallbackDelivery["Deliver Sanitized Pedagogical Feedback"]
+```
